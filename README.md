@@ -32,6 +32,8 @@ Dá para **migrar** nos dois sentidos: ao escolher uma pasta, o app oferece copi
 - **Player completo**: play/pause, anterior/próxima, barra de progresso, volume, aleatório, repetir tudo / repetir uma.
 - **Controles do sistema**: Media Session API (tela de bloqueio e teclas de mídia).
 - **Organização**: busca instantânea, ordenação, favoritas e playlists.
+- **Ocultar sem perder**: tirar uma música da lista principal (ou apagar da tela) **não** a remove das playlists. Ela continua tocando de dentro da playlist e fica guardada na seção *Ocultas*, de onde volta quando você quiser. Apagar o arquivo de verdade é uma ação separada, com aviso.
+- **Controle de capas**: colocar capa a partir de uma imagem sua, trocar, remover, ou voltar à capa que já vem dentro do arquivo. A capa escolhida é redimensionada e recortada para não pesar.
 - **Apagar arquivo** direto do disco (com confirmação), no modo pasta.
 - **Reler a pasta** para quando você adicionar ou remover músicas por fora.
 - **Responsivo**: barra lateral no desktop, mini-player e menu lateral no celular.
@@ -65,7 +67,8 @@ A reprodução depende do suporte do navegador ao codec. A leitura de tags é fe
 | Arquitetura | arquivo único (`index.html`), sem dependências |
 | Pasta real | File System Access API (`showDirectoryPicker`), handle guardado no IndexedDB |
 | Metadados da pasta | cache local (IndexedDB) validado por tamanho + data de modificação |
-| Playlists/favoritas na pasta | `/.biblioteca-musical.json` (texto, versionável, portátil) |
+| Playlists/favoritas na pasta | `/.biblioteca-musical.json` (texto, versionável, portátil) — guarda também `hidden`, `covers` e `noCovers` |
+| Capas personalizadas (pasta) | arquivos JPEG em `/.capas/`, referenciados pelo sidecar; viram data URL só ao renderizar |
 | Modo navegador | IndexedDB — lojas `tracks`, `audio` e `playlists` |
 | Memória | áudio carregado sob demanda via `Blob` + `URL.createObjectURL`, liberado ao trocar de faixa |
 | Tags MP3 | parser próprio de ID3v2 (sincsafe, unsynchronisation, UTF-8/UTF-16/latin-1, APIC) |
@@ -77,7 +80,7 @@ A reprodução depende do suporte do navegador ao codec. A leitura de tags é fe
 
 - [ ] Letras (`.lrc`) sincronizadas, lendo o arquivo ao lado da música
 - [ ] Equalizador e normalização de volume
-- [ ] Edição de metadados e capa direto no arquivo
+- [ ] Edição de metadados direto no arquivo (título, artista, álbum)
 - [ ] Backup `.zip` da biblioteca no modo navegador
 - [ ] Fila de reprodução reordenável por arrastar
 

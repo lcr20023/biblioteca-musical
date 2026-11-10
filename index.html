@@ -191,7 +191,8 @@ svg{display:block}
 }
 .np{display:flex;align-items:center;gap:11px;min-width:0}
 .npcov{width:52px;height:52px;border-radius:9px;overflow:hidden;flex:none;display:grid;place-items:center;
-  background:linear-gradient(135deg,#25253a,#17171f);color:#4d4d68;box-shadow:0 4px 14px rgba(0,0,0,.4)}
+  background:linear-gradient(135deg,#25253a,#17171f);color:#4d4d68;box-shadow:0 4px 14px rgba(0,0,0,.4);cursor:pointer}
+.npcov:hover{outline:2px solid rgba(139,92,246,.55);outline-offset:1px}
 .npcov img{width:100%;height:100%;object-fit:cover}
 .npcov svg{width:20px;height:20px}
 .npinfo{min-width:0}
@@ -370,6 +371,11 @@ input[type=range]::-moz-range-track{background:transparent}
       <span>Favoritas</span><span class="badge" id="badgeFav">0</span>
     </button>
 
+    <button class="navitem" data-view="hidden" id="navHidden" style="display:none">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18"/><path d="M10.6 5.2A9.7 9.7 0 0 1 12 5c5 0 9 4.5 9 7 0 .9-.5 2-1.4 3.1"/><path d="M6.2 6.3C4.2 7.7 3 9.5 3 12c0 2.5 4 7 9 7 1.6 0 3-.4 4.2-1.1"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>
+      <span>Ocultas</span><span class="badge" id="badgeHidden">0</span>
+    </button>
+
     <div class="navsec-row">
       <div class="navsec" style="padding-bottom:7px">Playlists</div>
       <button class="dotsbtn" id="newPlaylistBtn" title="Nova playlist">
@@ -493,6 +499,7 @@ input[type=range]::-moz-range-track{background:transparent}
 
 <input type="file" id="fileInput" accept="audio/*,.mp3,.m4a,.aac,.ogg,.oga,.opus,.wav,.flac,.wma,.webm" multiple hidden>
 <input type="file" id="folderInput" webkitdirectory directory multiple hidden>
+<input type="file" id="coverInput" accept="image/*" hidden>
 
 <div class="drop" id="drop">
   <div class="dropbox">
@@ -545,6 +552,9 @@ const I = {
   close:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
   up:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>',
   folder:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>',
+  image:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.6"/><path d="M21 15l-5-5L5 21"/></svg>',
+  eye:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12s3.5-7 9-7 9 7 9 7-3.5 7-9 7-9-7-9-7z"/><circle cx="12" cy="12" r="3"/></svg>',
+  eyeOff:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18"/><path d="M10.6 5.2A9.7 9.7 0 0 1 12 5c5 0 9 4.5 9 7 0 .9-.5 2-1.4 3.1"/><path d="M6.2 6.3C4.2 7.7 3 9.5 3 12c0 2.5 4 7 9 7 1.6 0 3-.4 4.2-1.1"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>',
   db:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg>'
 };
 
@@ -564,7 +574,9 @@ const state = {
   qIndex: -1,
   currentId: null,
   shuffle: false,
-  repeat: 'off'
+  repeat: 'off',
+  coverMap: {},        // pasta: path -> nome do arquivo em .capas
+  noCovers: new Set()  // pasta: capas removidas de propósito
 };
 
 const audio = new Audio();
@@ -976,9 +988,12 @@ async function saveSidecar(){
   try {
     const data = {
       app: 'biblioteca-musical',
-      version: 2,
+      version: 3,
       updated: new Date().toISOString(),
       favorites: state.tracks.filter(t => t.favorite).map(t => t.path || t.name),
+      hidden: state.tracks.filter(t => t.hidden).map(t => t.path || t.name),
+      covers: state.coverMap,
+      noCovers: Array.from(state.noCovers),
       playlists: state.playlists.map(p => ({ id: p.id, name: p.name, paths: p.trackIds }))
     };
     const fh = await state.root.getFileHandle(SIDECAR, { create:true });
@@ -1082,10 +1097,52 @@ async function loadFolder(){
 
   state.tracks = tracks;
 
+  state.coverMap = {};
+  state.noCovers = new Set();
+
   const side = await readSidecar();
   if (side){
     const favs = new Set((side.favorites || []).filter(x => typeof x === 'string'));
-    state.tracks.forEach(t => { t.favorite = favs.has(t.path); });
+    const hiddenSet = new Set((side.hidden || []).filter(x => typeof x === 'string'));
+    state.tracks.forEach(t => { t.favorite = favs.has(t.path); t.hidden = hiddenSet.has(t.path); });
+
+    const byPath = new Map(state.tracks.map(t => [t.path, t]));
+    const covers = (side.covers && typeof side.covers === 'object') ? side.covers : {};
+    const customPaths = Object.keys(covers).filter(pp => byPath.has(pp));
+
+    if (customPaths.length){
+      let capasDir = null;
+      try { capasDir = await state.root.getDirectoryHandle('.capas'); } catch(e){}
+      for (const pp of customPaths){
+        const t = byPath.get(pp);
+        state.coverMap[pp] = covers[pp];
+        const cached = meta.get(pp);
+        if (cached && cached.cover && cached.coverCustom && cached.size === t.size && cached.mtime === t.mtime){
+          t.cover = cached.cover;
+          t.coverCustom = true;
+          continue;
+        }
+        if (!capasDir) continue;
+        try {
+          const fh = await capasDir.getFileHandle(covers[pp]);
+          const f = await fh.getFile();
+          t.cover = await blobToDataURL(f);
+          t.coverCustom = true;
+          await dbPut('cache', cacheRecordFor(t));
+        } catch(e){}
+      }
+    }
+
+    for (const pp of (side.noCovers || [])){
+      const t = byPath.get(pp);
+      if (!t) continue;
+      state.noCovers.add(pp);
+      t.cover = null;
+      t.coverCustom = false;
+      const cached = meta.get(pp);
+      if (!cached || cached.cover) await dbPut('cache', cacheRecordFor(t));
+    }
+
     const validPaths = new Set(state.tracks.map(t => t.path));
     state.playlists = (side.playlists || [])
       .filter(p => p && p.name)
@@ -1151,7 +1208,10 @@ async function getFileForTrack(t){
 function visibleTracks(){
   let arr = state.tracks.slice();
 
-  if (state.view === 'favorites') arr = arr.filter(t => t.favorite);
+  if (state.view === 'favorites') arr = arr.filter(t => t.favorite && !t.hidden);
+  else if (state.view === 'hidden') arr = arr.filter(t => t.hidden);
+  else if (state.view !== 'playlist') arr = arr.filter(t => !t.hidden);
+
   if (state.view === 'playlist'){
     const pl = state.playlists.find(p => p.id === state.playlistId);
     const ids = pl ? pl.trackIds : [];
@@ -1241,6 +1301,10 @@ function emptyHTML(){
     return `<div class="empty"><div class="big">${I.heart}</div>
       <h3>Nenhuma favorita</h3><p>Toque no coração de uma música para guardá-la aqui.</p></div>`;
   }
+  if (state.view === 'hidden'){
+    return `<div class="empty"><div class="big">${I.eyeOff}</div>
+      <h3>Nenhuma música oculta</h3><p>Use o menu de uma música para tirá-la da lista principal sem tirar das playlists.</p></div>`;
+  }
   return `<div class="empty"><div class="big">${I.music}</div>
     <h3>Playlist vazia</h3><p>Abra o menu de uma música e escolha "Adicionar à playlist".</p></div>`;
 }
@@ -1251,9 +1315,15 @@ function renderNav(){
   $('#badgeAll').textContent = all;
   $('#badgeFav').textContent = favs;
 
+  const hid = state.tracks.filter(t => t.hidden).length;
+  const navHidden = $('#navHidden');
+  if (navHidden){
+    navHidden.style.display = hid ? '' : 'none';
+    $('#badgeHidden').textContent = hid;
+  }
   $$('.navitem[data-view]').forEach(b => {
     const v = b.dataset.view;
-    if (v === 'all' || v === 'favorites') b.classList.toggle('active', state.view === v);
+    if (v === 'all' || v === 'favorites' || v === 'hidden') b.classList.toggle('active', state.view === v);
   });
 
   const nav = $('#playlistNav');
@@ -1280,6 +1350,7 @@ function renderHeader(){
   const totalDur = list.reduce((s,t) => s + (t.duration||0), 0);
 
   if (state.view === 'favorites') title = 'Favoritas';
+  if (state.view === 'hidden') title = 'Ocultas';
   if (state.view === 'playlist'){
     const pl = state.playlists.find(p => p.id === state.playlistId);
     title = pl ? pl.name : 'Playlist';
@@ -1465,7 +1536,8 @@ function cacheRecordFor(t){
   return {
     id: (state.rootName || 'root') + '::' + t.path,
     size: t.size, mtime: t.mtime, title: t.title, artist: t.artist, album: t.album,
-    year: t.year, genre: t.genre, trackNo: t.trackNo, duration: t.duration, cover: t.cover
+    year: t.year, genre: t.genre, trackNo: t.trackNo, duration: t.duration,
+    cover: t.cover, coverCustom: !!t.coverCustom
   };
 }
 
@@ -1627,11 +1699,13 @@ async function migrateBrowserTracks(olds){
 
   const oldPls = await dbAll('playlists').catch(()=>[]);
   const favNames = new Set(olds.filter(t => t.favorite).map(t => t.name));
+  const hiddenNames = new Set(olds.filter(t => t.hidden).map(t => t.name));
 
   await loadFolder();
 
   state.tracks.forEach(t => {
     if (favNames.has(t.name)) t.favorite = true;
+    if (hiddenNames.has(t.name)) t.hidden = true;
   });
 
   const merged = [];
@@ -1659,15 +1733,192 @@ function openTrackMenu(id){
     <button class="mi" data-a="fav">${I.heart} ${t.favorite ? 'Remover das favoritas' : 'Adicionar às favoritas'}</button>
     <button class="mi" data-a="pl">${I.listAdd} Adicionar à playlist…</button>
     ${inPl ? `<button class="mi" data-a="rmpl">${I.close} Remover desta playlist</button>` : ''}
-    ${state.mode === 'folder' && t.path ? `<div style="padding:0 14px 8px;color:var(--muted2);font-size:11.5px;word-break:break-all">${esc(t.path)}</div>` : ''}
-    <button class="mi danger" data-a="del">${I.trash} ${state.mode === 'folder' ? 'Apagar o arquivo da pasta' : 'Excluir da biblioteca'}</button>
+    <div class="sep"></div>
+    <button class="mi" data-a="cover">${I.image}<span>${t.cover ? 'Trocar a capa…' : 'Colocar uma capa…'}</span></button>
+    <button class="mi" data-a="${t.hidden ? 'show' : 'hide'}">${t.hidden ? I.eye : I.eyeOff}<span>${t.hidden ? 'Mostrar na biblioteca' : 'Ocultar da biblioteca'}<small>${t.hidden ? 'Volta a aparecer na lista principal' : 'Some da lista principal, mas continua nas playlists'}</small></span></button>
+    ${state.mode === 'folder' && t.path ? `<div style="padding:6px 14px 8px;color:var(--muted2);font-size:11.5px;word-break:break-all">${esc(t.path)}</div>` : ''}
+    <div class="sep"></div>
+    <button class="mi danger" data-a="del">${I.trash} <span>${state.mode === 'folder' ? 'Apagar o arquivo da pasta' : 'Apagar de vez'}<small>Some da biblioteca e das playlists</small></span></button>
   `, a => {
     if (a === 'play'){ closeModal(); playTrack(id, { newQueue: true }); }
     if (a === 'fav'){ toggleFav(id); closeModal(); }
     if (a === 'pl'){ openPlaylistPicker(id); }
     if (a === 'rmpl'){ removeFromPlaylist(state.playlistId, id); closeModal(); }
+    if (a === 'cover'){ openCoverMenu(id); }
+    if (a === 'hide' || a === 'show'){ toggleHidden(id); closeModal(); }
     if (a === 'del'){ askDelete(id); }
   });
+}
+
+/* ---------- ocultar da biblioteca ---------- */
+function toggleHidden(id){
+  const t = byId(id);
+  if (!t) return;
+  t.hidden = !t.hidden;
+  if (state.mode === 'folder') scheduleSidecarSave();
+  else dbPut('tracks', t).catch(()=>{});
+  renderAll();
+  toast(t.hidden ? 'Oculta da biblioteca, continua nas playlists' : 'De volta à biblioteca');
+}
+
+/* ---------- capas ---------- */
+let pendingCoverId = null;
+
+function blobToDataURL(blob){
+  return new Promise((res, rej) => {
+    const fr = new FileReader();
+    fr.onload = () => res(fr.result);
+    fr.onerror = () => rej(fr.error);
+    fr.readAsDataURL(blob);
+  });
+}
+function dataURLtoBlob(u){
+  const parts = String(u).split(',');
+  const head = parts[0] || '';
+  const b64 = parts[1] || '';
+  const mime = (head.match(/data:([^;]+)/) || [])[1] || 'image/jpeg';
+  const bin = atob(b64);
+  const arr = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+  return new Blob([arr], { type: mime });
+}
+function fileToCoverDataURL(file, max){
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      try {
+        const m = max || 700;
+        let w = img.naturalWidth || 1, h = img.naturalHeight || 1;
+        const s = Math.min(1, m / Math.max(w, h));
+        w = Math.max(1, Math.round(w * s));
+        h = Math.max(1, Math.round(h * s));
+        const c = document.createElement('canvas');
+        c.width = w; c.height = h;
+        const ctx = c.getContext('2d');
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, w, h);
+        ctx.imageSmoothingQuality = 'high';
+        ctx.drawImage(img, 0, 0, w, h);
+        URL.revokeObjectURL(url);
+        resolve(c.toDataURL('image/jpeg', 0.86));
+      } catch(e){ URL.revokeObjectURL(url); reject(e); }
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('imagem inválida')); };
+    img.src = url;
+  });
+}
+function hashStr(s){
+  let h = 5381;
+  for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) >>> 0;
+  return h.toString(36);
+}
+function coverFileName(path){ return 'capa-' + hashStr(path) + '.jpg'; }
+function coversDir(){ return state.root.getDirectoryHandle('.capas', { create:true }); }
+
+function openCoverMenu(id){
+  const t = byId(id);
+  if (!t) return;
+  pendingCoverId = id;
+  showModal(`
+    <h3>Capa</h3>
+    <p class="sub">${esc(t.title || 'Sem título')}</p>
+    <div style="display:flex;justify-content:center;padding:4px 14px 14px">
+      ${coverHTML(t, 'cov').replace('class="cov"', 'class="cov" style="width:132px;height:132px;border-radius:14px"')}
+    </div>
+    <button class="mi" data-a="pick">${I.image}<span>Escolher uma imagem…<small>JPG, PNG ou WebP</small></span></button>
+    ${t.coverCustom ? `<button class="mi" data-a="restore">${I.music}<span>Voltar à capa do arquivo</span></button>` : ''}
+    ${t.cover ? `<button class="mi danger" data-a="remove">${I.close}<span>Remover capa</span></button>` : ''}
+  `, a => {
+    if (a === 'pick'){ closeModal(); $('#coverInput').click(); }
+    if (a === 'restore'){ closeModal(); restoreTagCover(id); }
+    if (a === 'remove'){ closeModal(); removeCover(id); }
+  });
+}
+
+async function applyCoverFromFile(file){
+  const t = pendingCoverId ? byId(pendingCoverId) : null;
+  if (!t || !file) return;
+  showProgress('Preparando a capa…');
+  let dataURL;
+  try { dataURL = await fileToCoverDataURL(file, 700); }
+  catch(e){ hideProgress(0); toast('Não consegui ler essa imagem.'); return; }
+
+  t.cover = dataURL;
+  t.coverCustom = true;
+
+  if (state.mode === 'folder'){
+    try {
+      const dir = await coversDir();
+      const name = coverFileName(t.path);
+      const old = state.coverMap[t.path];
+      if (old && old !== name){ try { await dir.removeEntry(old); } catch(e){} }
+      const fh = await dir.getFileHandle(name, { create:true });
+      const w = await fh.createWritable();
+      await w.write(dataURLtoBlob(dataURL));
+      await w.close();
+      state.coverMap[t.path] = name;
+      state.noCovers.delete(t.path);
+      await dbPut('cache', cacheRecordFor(t));
+      scheduleSidecarSave();
+    } catch(e){ toast('Não consegui gravar a capa na pasta.'); }
+  } else {
+    t.coverRemoved = false;
+    await dbPut('tracks', t).catch(()=>{});
+  }
+  hideProgress(0);
+  renderAll();
+  toast('Capa atualizada');
+}
+
+async function removeCover(id){
+  const t = byId(id);
+  if (!t) return;
+  t.cover = null;
+  t.coverCustom = false;
+
+  if (state.mode === 'folder'){
+    const name = state.coverMap[t.path];
+    if (name){ try { await (await coversDir()).removeEntry(name); } catch(e){} }
+    delete state.coverMap[t.path];
+    state.noCovers.add(t.path);
+    await dbPut('cache', cacheRecordFor(t));
+    scheduleSidecarSave();
+  } else {
+    t.coverRemoved = true;
+    await dbPut('tracks', t).catch(()=>{});
+  }
+  renderAll();
+  toast('Capa removida');
+}
+
+async function restoreTagCover(id){
+  const t = byId(id);
+  if (!t) return;
+  showProgress('Lendo a capa do arquivo…');
+  let cover = null;
+  try {
+    const blob = await getFileForTrack(t);
+    if (blob){ const tags = await readTags(blob); cover = tags.cover || null; }
+  } catch(e){}
+  hideProgress(0);
+
+  t.cover = cover;
+  t.coverCustom = false;
+
+  if (state.mode === 'folder'){
+    const name = state.coverMap[t.path];
+    if (name){ try { await (await coversDir()).removeEntry(name); } catch(e){} }
+    delete state.coverMap[t.path];
+    state.noCovers.delete(t.path);
+    await dbPut('cache', cacheRecordFor(t));
+    scheduleSidecarSave();
+  } else {
+    t.coverRemoved = !cover;
+    await dbPut('tracks', t).catch(()=>{});
+  }
+  renderAll();
+  toast(cover ? 'Capa original restaurada' : 'Esse arquivo não tem capa');
 }
 
 function openPlaylistPicker(trackId){
@@ -1761,6 +2012,10 @@ async function deleteTrack(id){
       return;
     }
     try { await dbDel('cache', (state.rootName || 'root') + '::' + t.path); } catch(e){}
+    const cn = state.coverMap[t.path];
+    if (cn){ try { await (await coversDir()).removeEntry(cn); } catch(e){} }
+    delete state.coverMap[t.path];
+    state.noCovers.delete(t.path);
     scheduleSidecarSave();
   } else {
     await dbDel('audio', id);
@@ -1938,6 +2193,12 @@ function bindUI(){
   $('#folderBtn').addEventListener('click', openLocationModal);
   $('#rescanBtn').addEventListener('click', () => loadFolder());
   $('#fileInput').addEventListener('change', e => { importFiles(e.target.files); e.target.value = ''; });
+  $('#coverInput').addEventListener('change', e => {
+    const f = e.target.files && e.target.files[0];
+    e.target.value = '';
+    if (f) applyCoverFromFile(f);
+  });
+  $('#npCover').addEventListener('click', () => { if (state.currentId) openCoverMenu(state.currentId); });
   $('#folderInput').addEventListener('change', e => { importFiles(e.target.files); e.target.value = ''; });
 
   let dragDepth = 0;
