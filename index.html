@@ -23,7 +23,7 @@ button{font-family:inherit;font-size:inherit;color:inherit;background:none;borde
 input,select{font-family:inherit;font-size:inherit;color:inherit}
 svg{display:block}
 ::-webkit-scrollbar{width:10px;height:10px}
-::-webkit-scrollbar-thumb{background:#2a2a3c;border-radius:8px;border:2px solid var(--bg)}
+::-webkit-scrollbar-thumb{background:#2a2a3c;border-radius:8px;border-right:2px solid var(--bg);border-left:2px solid var(--bg)}
 ::-webkit-scrollbar-thumb:hover{background:#3a3a52}
 ::-webkit-scrollbar-track{background:transparent}
 
@@ -67,8 +67,16 @@ svg{display:block}
 .plrow .del{opacity:0;width:26px;height:26px;display:grid;place-items:center;border-radius:7px;color:var(--muted2);flex:none}
 .plrow:hover .del{opacity:1}
 .plrow .del:hover{background:#2a1a20;color:var(--danger)}
-.sidefoot{margin-top:auto;padding:12px 8px 0;border-top:1px solid var(--line);color:var(--muted2);font-size:11px;line-height:1.7}
+.sidefoot{margin-top:auto;padding:10px 8px 0;border-top:1px solid var(--line);color:var(--muted2);font-size:11px;line-height:1.6}
 .sidefoot b{color:var(--muted);font-weight:600}
+.locbtn{
+  display:flex;align-items:center;gap:7px;width:100%;padding:8px 9px;margin-bottom:8px;
+  border-radius:9px;background:#171722;border:1px solid var(--line);color:var(--muted);
+  font-size:11.5px;text-align:left;transition:.14s
+}
+.locbtn:hover{background:#1e1e2b;color:var(--txt);border-color:#33334a}
+.locbtn svg{width:14px;height:14px;flex:none;color:var(--accent)}
+.locbtn span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .dotsbtn{width:26px;height:26px;display:grid;place-items:center;border-radius:7px;color:var(--muted2);flex:none;opacity:0}
 .navsec-row{display:flex;align-items:center;justify-content:space-between;padding-right:4px}
 .navsec-row .dotsbtn{opacity:1}
@@ -79,10 +87,7 @@ svg{display:block}
   grid-area:main; display:flex; flex-direction:column; min-height:0; min-width:0;
   background:radial-gradient(1100px 380px at 55% -18%,rgba(139,92,246,.13),transparent 72%),var(--bg);
 }
-.topbar{
-  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
-  padding:16px 22px 12px;
-}
+.topbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:16px 22px 12px}
 .hamb{display:none;width:38px;height:38px;border-radius:10px;place-items:center;background:var(--panel);border:1px solid var(--line)}
 .search{position:relative;flex:1;min-width:180px;max-width:460px}
 .search svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--muted2)}
@@ -110,13 +115,21 @@ svg{display:block}
   background-repeat:no-repeat;background-position:right 9px center;background-size:13px
 }
 
-/* library header */
+/* banner de permissão */
+.banner{
+  display:none;align-items:center;gap:10px;margin:0 22px 10px;padding:10px 14px;
+  background:rgba(139,92,246,.12);border:1px solid #3b2f66;border-radius:11px;font-size:12.5px;color:#d6cff7
+}
+.banner.show{display:flex}
+.banner svg{width:16px;height:16px;flex:none;color:#a78bfa}
+.banner .btn{margin-left:auto;padding:6px 12px;font-size:12px;background:#3a2f66;border-color:#4c3d85;color:#fff}
+.banner .btn:hover{background:#463a78}
+
 .libhead{padding:6px 22px 14px;display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap}
 .libhead h1{margin:0;font-size:26px;letter-spacing:-.6px;line-height:1.15}
 .libhead .meta{color:var(--muted);font-size:12.5px;margin-top:4px}
 .libhead .spacer{flex:1}
 
-/* track list */
 .content{flex:1;min-height:0;overflow-y:auto;padding:0 12px 24px;overscroll-behavior:contain}
 .listhead{
   display:grid;grid-template-columns:34px 44px minmax(0,1fr) 150px 56px 68px;
@@ -161,14 +174,13 @@ svg{display:block}
 .acts .ic{opacity:0}
 .row:hover .acts .ic,.row.playing .acts .ic,.ic.fav.on{opacity:1}
 
-/* empty state */
 .empty{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
   padding:60px 20px;color:var(--muted);gap:6px}
 .empty .big{width:74px;height:74px;border-radius:22px;display:grid;place-items:center;margin-bottom:10px;
   background:linear-gradient(135deg,rgba(139,92,246,.22),rgba(34,211,238,.12));color:#b7a6ff}
 .empty .big svg{width:34px;height:34px}
 .empty h3{margin:0;color:var(--txt);font-size:16px}
-.empty p{margin:0;font-size:13px;max-width:340px;line-height:1.6}
+.empty p{margin:0;font-size:13px;max-width:380px;line-height:1.6}
 .empty .btn{margin-top:12px}
 
 /* ---------- player ---------- */
@@ -223,12 +235,13 @@ input[type=range]::-moz-range-track{background:transparent}
 .modal{position:fixed;inset:0;background:rgba(5,5,10,.72);backdrop-filter:blur(4px);
   display:none;align-items:center;justify-content:center;padding:20px;z-index:200}
 .modal.show{display:flex}
-.sheet{width:100%;max-width:400px;background:var(--panel);border:1px solid var(--line);
-  border-radius:18px;padding:8px;box-shadow:var(--shadow);max-height:80vh;overflow-y:auto;animation:pop .16s ease-out}
+.sheet{width:100%;max-width:420px;background:var(--panel);border:1px solid var(--line);
+  border-radius:18px;padding:8px;box-shadow:var(--shadow);max-height:84vh;overflow-y:auto;animation:pop .16s ease-out}
 @keyframes pop{from{opacity:0;transform:translateY(8px) scale(.98)}to{opacity:1;transform:none}}
 .sheet h3{margin:0;padding:12px 14px 2px;font-size:15px;letter-spacing:-.2px}
 .sheet .sub{color:var(--muted);font-size:12.5px;padding:0 14px 10px;margin:0;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sheet .txt{color:var(--muted);font-size:13px;padding:0 14px 12px;margin:0;line-height:1.6}
 .mi{display:flex;align-items:center;gap:10px;width:100%;padding:12px 14px;border-radius:11px;
   text-align:left;color:var(--txt);transition:.12s;font-weight:500}
 .mi:hover{background:#22222f}
@@ -236,6 +249,9 @@ input[type=range]::-moz-range-track{background:transparent}
 .mi.danger{color:var(--danger)}
 .mi.danger svg{color:var(--danger)}
 .mi.danger:hover{background:#2a171b}
+.mi small{display:block;color:var(--muted2);font-size:11.5px;font-weight:400;margin-top:2px;line-height:1.4}
+.mi .kt{margin-left:auto;color:var(--muted2);font-size:11.5px}
+.sheet .sep{height:1px;background:var(--line);margin:6px 10px}
 .sheet input[type=text]{width:calc(100% - 20px);margin:4px 10px 8px;padding:11px 12px;border-radius:10px;
   background:#111119;border:1px solid var(--line);outline:none}
 .sheet input[type=text]:focus{border-color:#41396b}
@@ -250,7 +266,7 @@ input[type=range]::-moz-range-track{background:transparent}
 .imp{position:fixed;inset:0;background:rgba(5,5,10,.82);backdrop-filter:blur(5px);
   display:none;place-items:center;z-index:250;padding:20px}
 .imp.show{display:grid}
-.impbox{width:100%;max-width:380px;background:var(--panel);border:1px solid var(--line);
+.impbox{width:100%;max-width:390px;background:var(--panel);border:1px solid var(--line);
   border-radius:18px;padding:24px;text-align:center;box-shadow:var(--shadow)}
 .impbox .spin{width:44px;height:44px;margin:0 auto 16px;border-radius:50%;
   border:3px solid #2a2a3e;border-top-color:var(--accent);animation:sp .8s linear infinite}
@@ -260,6 +276,7 @@ input[type=range]::-moz-range-track{background:transparent}
 .track-bar{height:6px;border-radius:6px;background:#26263a;overflow:hidden}
 .track-bar i{display:block;height:100%;width:0%;border-radius:6px;
   background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .2s}
+.impcancel{margin-top:14px;color:var(--muted2);font-size:12px;text-decoration:underline}
 
 /* ---------- drop zone ---------- */
 .drop{position:fixed;inset:0;z-index:400;display:none;place-items:center;
@@ -271,7 +288,6 @@ input[type=range]::-moz-range-track{background:transparent}
 .dropbox b{font-size:18px;display:block;margin-bottom:6px}
 .dropbox span{color:var(--muted);font-size:13px}
 
-/* ---------- fatal ---------- */
 .fatal{position:fixed;inset:0;display:none;place-items:center;padding:24px;z-index:500;background:var(--bg)}
 .fatal.show{display:grid}
 .fatal .box{max-width:440px;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:26px}
@@ -279,10 +295,8 @@ input[type=range]::-moz-range-track{background:transparent}
 .fatal p{color:var(--muted);line-height:1.65;font-size:13.5px;margin:0 0 10px}
 .fatal code{background:#111119;padding:2px 6px;border-radius:5px;font-size:12px;color:#c4b5fd}
 
-/* ---------- scrim ---------- */
 .scrim{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:45}
 
-/* ---------- responsive ---------- */
 @media (max-width:900px){
   .app{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto}
   .sidebar{position:fixed;left:0;top:0;bottom:0;width:262px;transform:translateX(-102%);
@@ -310,7 +324,6 @@ input[type=range]::-moz-range-track{background:transparent}
   .acts{width:34px}
   .acts .ic{opacity:1}
   .ic.menubtn{width:26px}
-  /* topbar compacta: 2 linhas, sem quebra */
   .topbar{display:grid;grid-template-columns:38px minmax(0,1fr) 38px;grid-auto-rows:38px;
     gap:8px;padding:10px 14px 8px;align-items:center}
   .hamb{grid-column:1;grid-row:1;width:38px;height:38px}
@@ -319,16 +332,15 @@ input[type=range]::-moz-range-track{background:transparent}
   #importBtn{grid-column:3;grid-row:1;width:38px;height:38px;padding:0;justify-content:center;font-size:0;gap:0}
   .sel{grid-column:1/3;grid-row:2;height:38px;padding-top:0;padding-bottom:0}
   #folderBtn{grid-column:3;grid-row:2;width:38px;height:38px;padding:0;justify-content:center;font-size:0;gap:0}
-  /* cabeçalho da biblioteca em uma linha só */
   .libhead{padding:2px 14px 10px;gap:8px;flex-wrap:nowrap;align-items:center}
   .libhead > div:first-child{flex:1;min-width:0}
   .libhead .spacer{display:none}
   .libhead h1{font-size:20px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .libhead .meta{font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  #playAllBtn,#shuffleAllBtn{width:34px;height:34px;padding:0;justify-content:center;font-size:0;gap:0;flex:none}
+  #playAllBtn,#shuffleAllBtn,#rescanBtn{width:34px;height:34px;padding:0;justify-content:center;font-size:0;gap:0;flex:none}
+  .banner{margin:0 14px 8px;font-size:12px;padding:9px 12px}
   .content{padding:0 8px 16px}
   .toast{bottom:96px}
-  body{overflow:hidden}
 }
 @media (max-width:420px){
   .npinfo .a{font-size:13px}
@@ -340,7 +352,6 @@ input[type=range]::-moz-range-track{background:transparent}
 
 <div class="app" id="app">
 
-  <!-- ============ SIDEBAR ============ -->
   <aside class="sidebar" id="sidebar">
     <div class="brand">
       <div class="logo">
@@ -371,7 +382,6 @@ input[type=range]::-moz-range-track{background:transparent}
   </aside>
   <div class="scrim" id="scrim"></div>
 
-  <!-- ============ MAIN ============ -->
   <main class="main">
     <div class="topbar">
       <button class="hamb" id="hamb">
@@ -382,7 +392,7 @@ input[type=range]::-moz-range-track{background:transparent}
         <input id="search" type="search" placeholder="Buscar por música, artista ou álbum…" autocomplete="off">
       </div>
       <select class="sel" id="sortSel">
-        <option value="added">Mais recentes</option>
+        <option value="added">Adicionadas primeiro</option>
         <option value="title">Título (A-Z)</option>
         <option value="artist">Artista (A-Z)</option>
         <option value="album">Álbum (A-Z)</option>
@@ -392,10 +402,16 @@ input[type=range]::-moz-range-track{background:transparent}
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
         Importar
       </button>
-      <button class="btn ghost" id="folderBtn" title="Importar uma pasta inteira">
+      <button class="btn ghost" id="folderBtn" title="Onde a biblioteca fica guardada">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
         Pasta
       </button>
+    </div>
+
+    <div class="banner" id="banner">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><circle cx="12" cy="12" r="9"/></svg>
+      <span id="bannerText">A pasta precisa de permissão.</span>
+      <button class="btn" id="bannerBtn">Reconectar</button>
     </div>
 
     <div class="libhead">
@@ -404,6 +420,9 @@ input[type=range]::-moz-range-track{background:transparent}
         <div class="meta" id="viewMeta">Nenhuma música ainda</div>
       </div>
       <div class="spacer"></div>
+      <button class="btn ghost" id="rescanBtn" title="Reler a pasta" style="display:none">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.6-6.4"/><path d="M21 3v6h-6"/></svg>
+      </button>
       <button class="btn" id="playAllBtn">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
         Tocar tudo
@@ -422,7 +441,6 @@ input[type=range]::-moz-range-track{background:transparent}
     </div>
   </main>
 
-  <!-- ============ PLAYER ============ -->
   <div class="player" id="player">
     <div class="np">
       <div class="npcov" id="npCover">
@@ -473,48 +491,41 @@ input[type=range]::-moz-range-track{background:transparent}
   </div>
 </div>
 
-<!-- hidden inputs -->
 <input type="file" id="fileInput" accept="audio/*,.mp3,.m4a,.aac,.ogg,.oga,.opus,.wav,.flac,.wma,.webm" multiple hidden>
 <input type="file" id="folderInput" webkitdirectory directory multiple hidden>
 
-<!-- drag drop -->
 <div class="drop" id="drop">
   <div class="dropbox">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
-    <b>Solte para importar</b>
+    <b>Solte para adicionar</b>
     <span>Arquivos de áudio ou pastas inteiras</span>
   </div>
 </div>
 
-<!-- import progress -->
 <div class="imp" id="impOverlay">
   <div class="impbox">
     <div class="spin"></div>
-    <h3 id="impLabel">Importando…</h3>
+    <h3 id="impLabel">Lendo a pasta…</h3>
     <div class="f" id="impSub"></div>
     <div class="track-bar"><i id="impBar"></i></div>
   </div>
 </div>
 
-<!-- modal -->
 <div class="modal" id="modal"><div class="sheet" id="modalBody"></div></div>
-
-<!-- toast -->
 <div class="toast" id="toast"></div>
 
-<!-- fatal -->
 <div class="fatal" id="fatal">
   <div class="box">
     <h2>Não consegui abrir o armazenamento</h2>
     <p>Este navegador bloqueou o IndexedDB para arquivos abertos direto do disco (<code>file://</code>).</p>
-    <p>Funciona normal se você abrir por um servidor local, ou testar no Chrome/Edge. Também vale publicar o arquivo em qualquer hospedagem estática.</p>
+    <p>Abra por um servidor local, use o link do GitHub Pages, ou abra no Chrome/Edge.</p>
   </div>
 </div>
 
 <script>
 "use strict";
 /* =========================================================
-   Biblioteca Musical — app de arquivo único, 100% offline
+   Biblioteca Musical v2 — pasta real do computador
    ========================================================= */
 
 const $ = s => document.querySelector(s);
@@ -522,7 +533,6 @@ const $$ = s => Array.from(document.querySelectorAll(s));
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const uid = () => (crypto.randomUUID ? crypto.randomUUID() : 'id' + Date.now() + Math.random().toString(16).slice(2));
 
-/* ---------------- ÍCONES ---------------- */
 const I = {
   heart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l8.8 8.8 8.8-8.8a5.5 5.5 0 0 0 0-7.8z"/></svg>',
   dots:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.9"/><circle cx="12" cy="12" r="1.9"/><circle cx="12" cy="19" r="1.9"/></svg>',
@@ -533,23 +543,28 @@ const I = {
   plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
   listAdd:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h11M4 12h11M4 17h7"/><path d="M18 13v7M14.5 16.5h7"/></svg>',
   close:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
-  up:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>'
+  up:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>',
+  folder:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>',
+  db:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg>'
 };
 
-/* ---------------- ESTADO ---------------- */
 const state = {
+  mode: 'browser',        // 'folder' | 'browser'
+  root: null,             // FileSystemDirectoryHandle
+  rootName: '',
+  needReconnect: false,
   tracks: [],
   playlists: [],
-  view: 'all',            // all | favorites | playlist
+  view: 'all',
   playlistId: null,
   search: '',
   sort: 'added',
-  viewIds: [],            // ids na ordem exibida
-  queue: [],              // ids na ordem de reprodução
+  viewIds: [],
+  queue: [],
   qIndex: -1,
   currentId: null,
   shuffle: false,
-  repeat: 'off'           // off | all | one
+  repeat: 'off'
 };
 
 const audio = new Audio();
@@ -557,23 +572,24 @@ audio.preload = 'metadata';
 let currentURL = null;
 
 /* ---------------- BANCO ---------------- */
-const DB_NAME = 'MusicLibraryDB', DB_VER = 1;
+const DB_NAME = 'MusicLibraryDB', DB_VER = 2;
+const SIDECAR = '.biblioteca-musical.json';
 let db = null;
 
 function openDB(){
   return new Promise((res, rej) => {
     let req;
-    try { req = indexedDB.open(DB_NAME, DB_VER); }
-    catch(e){ return rej(e); }
+    try { req = indexedDB.open(DB_NAME, DB_VER); } catch(e){ return rej(e); }
     req.onupgradeneeded = e => {
       const d = e.target.result;
       if (!d.objectStoreNames.contains('tracks')) d.createObjectStore('tracks', { keyPath:'id' });
-      if (!d.objectStoreNames.contains('audio'))  d.createObjectStore('audio',  { keyPath:'id' });
+      if (!d.objectStoreNames.contains('audio')) d.createObjectStore('audio', { keyPath:'id' });
       if (!d.objectStoreNames.contains('playlists')) d.createObjectStore('playlists', { keyPath:'id' });
+      if (!d.objectStoreNames.contains('settings')) d.createObjectStore('settings', { keyPath:'id' });
+      if (!d.objectStoreNames.contains('cache')) d.createObjectStore('cache', { keyPath:'id' });
     };
     req.onsuccess = () => { db = req.result; res(db); };
     req.onerror = () => rej(req.error);
-    req.onblocked = () => rej(new Error('blocked'));
   });
 }
 function store(name, mode){ return db.transaction(name, mode || 'readonly').objectStore(name); }
@@ -581,7 +597,6 @@ function dbPut(name, val){ return new Promise((res,rej)=>{ const r = store(name,
 function dbGet(name, key){ return new Promise((res,rej)=>{ const r = store(name).get(key); r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error); }); }
 function dbDel(name, key){ return new Promise((res,rej)=>{ const r = store(name,'readwrite').delete(key); r.onsuccess=()=>res(); r.onerror=()=>rej(r.error); }); }
 function dbAll(name){ return new Promise((res,rej)=>{ const r = store(name).getAll(); r.onsuccess=()=>res(r.result||[]); r.onerror=()=>rej(r.error); }); }
-function dbClear(name){ return new Promise((res,rej)=>{ const r = store(name,'readwrite').clear(); r.onsuccess=()=>res(); r.onerror=()=>rej(r.error); }); }
 
 /* ---------------- UTIL ---------------- */
 function fmt(sec){
@@ -594,8 +609,7 @@ function fmt(sec){
 function fmtTotal(sec){
   if (!sec) return '0 min';
   const h = Math.floor(sec/3600), m = Math.round((sec%3600)/60);
-  if (h > 0) return h + ' h ' + m + ' min';
-  return m + ' min';
+  return h > 0 ? h + ' h ' + m + ' min' : m + ' min';
 }
 function fmtBytes(b){
   if (!b) return '0 B';
@@ -610,14 +624,36 @@ function grad(seed){
 }
 function toast(msg){
   const t = $('#toast'); t.textContent = msg; t.classList.add('show');
-  clearTimeout(toast._t); toast._t = setTimeout(()=>t.classList.remove('show'), 2800);
+  clearTimeout(toast._t); toast._t = setTimeout(()=>t.classList.remove('show'), 3000);
 }
 function shuffleArr(a){ for (let i=a.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]] = [a[j],a[i]]; } return a; }
 function byId(id){ return state.tracks.find(t => t.id === id); }
+function native(a,b){ return String(a||'').localeCompare(String(b||''), 'pt-BR', { sensitivity:'base' }); }
+async function mapLimit(items, limit, fn){
+  let i = 0;
+  const run = async () => { while (i < items.length){ const idx = i++; await fn(items[idx], idx); } };
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, run));
+}
 
-/* =========================================================
-   PARSERS DE METADADOS
-   ========================================================= */
+/* ---------------- PROGRESSO ---------------- */
+let impActive = false;
+function showProgress(label){
+  impActive = true;
+  $('#impLabel').textContent = label || 'Trabalhando…';
+  $('#impSub').textContent = '';
+  $('#impBar').style.width = '0%';
+  $('#impOverlay').classList.add('show');
+}
+function setProgress(label, sub, pct){
+  if (label != null) $('#impLabel').textContent = label;
+  if (sub != null) $('#impSub').textContent = sub;
+  if (pct != null) $('#impBar').style.width = Math.max(0, Math.min(100, pct)).toFixed(1) + '%';
+}
+function hideProgress(delay){
+  impActive = false;
+  setTimeout(() => { $('#impOverlay').classList.remove('show'); }, delay || 200);
+}
+
 function syncsafe(u8,p){ return ((u8[p]&0x7f)<<21) | ((u8[p+1]&0x7f)<<14) | ((u8[p+2]&0x7f)<<7) | (u8[p+3]&0x7f); }
 function u32(u8,p){ return ((u8[p]<<24) | (u8[p+1]<<16) | (u8[p+2]<<8) | u8[p+3]) >>> 0; }
 function u32le(u8,p){ return (u8[p] | (u8[p+1]<<8) | (u8[p+2]<<16) | (u8[p+3]<<24)) >>> 0; }
@@ -879,6 +915,237 @@ function fromFileName(name){
 }
 
 /* =========================================================
+   PASTA REAL DO COMPUTADOR (File System Access API)
+   ========================================================= */
+function fsSupported(){ return typeof window.showDirectoryPicker === 'function'; }
+
+async function permState(handle){
+  if (!handle || typeof handle.queryPermission !== 'function') return 'granted';
+  try { return await handle.queryPermission({ mode:'readwrite' }); } catch(e){ return 'granted'; }
+}
+async function askPermission(handle){
+  if (!handle || typeof handle.requestPermission !== 'function') return true;
+  try { return (await handle.requestPermission({ mode:'readwrite' })) === 'granted'; } catch(e){ return false; }
+}
+function pickFolder(){
+  return window.showDirectoryPicker({ id:'biblioteca-musical', mode:'readwrite' });
+}
+
+function showBanner(text, btnLabel, handler){
+  $('#bannerText').textContent = text;
+  const b = $('#bannerBtn');
+  b.textContent = btnLabel || 'Reconectar';
+  b.onclick = handler || null;
+  b.style.display = handler ? '' : 'none';
+  $('#banner').classList.add('show');
+}
+function hideBanner(){ $('#banner').classList.remove('show'); }
+
+/* --- varredura --- */
+async function walkFolder(dir, prefix, out, depth){
+  if (depth > 8) return;
+  for await (const entry of dir.values()){
+    const name = entry.name;
+    if (!name || name.charAt(0) === '.') continue;
+    if (entry.kind === 'directory'){
+      await walkFolder(entry, prefix + name + '/', out, depth + 1);
+    } else if (isAudioName(name)){
+      out.push({ path: prefix + name, name, parent: dir, handle: entry });
+    }
+  }
+}
+
+/* --- sidecar (playlists e favoritas dentro da pasta) --- */
+async function readSidecar(){
+  try {
+    const fh = await state.root.getFileHandle(SIDECAR);
+    const file = await fh.getFile();
+    const txt = await file.text();
+    const data = JSON.parse(txt);
+    return (data && typeof data === 'object') ? data : null;
+  } catch(e){ return null; }
+}
+let sidecarTimer = null;
+function scheduleSidecarSave(){
+  if (state.mode !== 'folder' || !state.root) return;
+  clearTimeout(sidecarTimer);
+  sidecarTimer = setTimeout(saveSidecar, 500);
+}
+async function saveSidecar(){
+  if (state.mode !== 'folder' || !state.root) return;
+  try {
+    const data = {
+      app: 'biblioteca-musical',
+      version: 2,
+      updated: new Date().toISOString(),
+      favorites: state.tracks.filter(t => t.favorite).map(t => t.path || t.name),
+      playlists: state.playlists.map(p => ({ id: p.id, name: p.name, paths: p.trackIds }))
+    };
+    const fh = await state.root.getFileHandle(SIDECAR, { create:true });
+    const w = await fh.createWritable();
+    await w.write(JSON.stringify(data, null, 2));
+    await w.close();
+  } catch(e){ console.warn('Falha ao gravar o sidecar', e); }
+}
+
+/* --- leitura da pasta --- */
+async function loadFolder(){
+  if (state.mode !== 'folder' || !state.root) return;
+
+  const perm = await permState(state.root);
+  if (perm !== 'granted'){
+    state.needReconnect = true;
+    state.tracks = [];
+    renderAll();
+    showBanner('A pasta "' + state.rootName + '" precisa de permissão para ser lida.', 'Reconectar', reconnectFolder);
+    return;
+  }
+  state.needReconnect = false;
+  hideBanner();
+
+  showProgress('Lendo a pasta "' + (state.rootName || '') + '"…');
+  const entries = [];
+  try {
+    await walkFolder(state.root, '', entries, 0);
+  } catch(e){
+    hideProgress(0);
+    showBanner('Não consegui abrir a pasta "' + state.rootName + '". Ela pode ter sido movida ou apagada.', 'Escolher outra', openLocationModal);
+    return;
+  }
+
+  const prefix = (state.rootName || 'root') + '::';
+  let cache = new Map();
+  try {
+    const all = await dbAll('cache');
+    for (const c of all){ if (c.id.startsWith(prefix)) cache.set(c.id.slice(prefix.length), c); }
+  } catch(e){}
+
+  const todo = [];
+  const meta = new Map();
+  for (const e of entries){
+    let f = null;
+    try { f = await e.handle.getFile(); } catch(err){ continue; }
+    e.size = f.size;
+    e.mtime = f.lastModified || 0;
+    const c = cache.get(e.path);
+    if (c && c.size === e.size && c.mtime === e.mtime && c.duration) meta.set(e.path, c);
+    else todo.push({ e, f });
+  }
+
+  setProgress('Analisando ' + entries.length + ' arquivos…', todo.length ? 'lendo tags de ' + todo.length : 'tudo em cache', 6);
+
+  let done = 0;
+  await mapLimit(todo, 4, async job => {
+    const { e, f } = job;
+    try {
+      const tags = await readTags(f);
+      const fn = fromFileName(e.name);
+      const rec = {
+        id: prefix + e.path,
+        size: e.size, mtime: e.mtime,
+        title: (tags.title || fn.title || 'Sem título').slice(0, 200),
+        artist: (tags.artist || fn.artist || '').slice(0, 160),
+        album: (tags.album || '').slice(0, 160),
+        year: (tags.year || '').slice(0, 4),
+        genre: (tags.genre || '').slice(0, 60),
+        trackNo: tags.trackNo || '',
+        duration: tags.duration || await getDuration(f),
+        cover: tags.cover || null
+      };
+      meta.set(e.path, rec);
+      await dbPut('cache', rec);
+    } catch(err){ console.warn('Falha ao ler', e.path, err); }
+    done++;
+    setProgress('Analisando…', e.name, 6 + (done / Math.max(1, todo.length)) * 94);
+  });
+
+  const tracks = [];
+  for (const e of entries){
+    const m = meta.get(e.path);
+    if (!m) continue;
+    tracks.push({
+      id: e.path,
+      path: e.path,
+      name: e.name,
+      size: e.size,
+      mtime: e.mtime,
+      parent: e.parent,
+      handle: e.handle,
+      title: m.title, artist: m.artist, album: m.album, year: m.year,
+      genre: m.genre, trackNo: m.trackNo,
+      duration: m.duration || 0,
+      cover: m.cover || null,
+      addedAt: m.addedAt || e.mtime || Date.now(),
+      favorite: false
+    });
+  }
+
+  state.tracks = tracks;
+
+  const side = await readSidecar();
+  if (side){
+    const favs = new Set((side.favorites || []).filter(x => typeof x === 'string'));
+    state.tracks.forEach(t => { t.favorite = favs.has(t.path); });
+    const validPaths = new Set(state.tracks.map(t => t.path));
+    state.playlists = (side.playlists || [])
+      .filter(p => p && p.name)
+      .map(p => ({
+        id: p.id || uid(),
+        name: String(p.name).slice(0, 80),
+        trackIds: (p.paths || []).filter(x => validPaths.has(x)),
+        createdAt: p.createdAt || 0
+      }));
+  } else {
+    state.playlists = [];
+  }
+
+  const selId = state.currentId;
+  if (selId && !byId(selId)){ state.currentId = null; }
+
+  hideProgress(150);
+  renderAll();
+}
+
+async function reconnectFolder(){
+  if (!state.root) return openLocationModal();
+  const ok = await askPermission(state.root);
+  if (!ok){ toast('Permissão não concedida.'); return; }
+  hideBanner();
+  await loadFolder();
+}
+
+/* --- escrita na pasta --- */
+async function uniqueName(dir, name){
+  const dot = name.lastIndexOf('.');
+  const base = dot > 0 ? name.slice(0, dot) : name;
+  const ext = dot > 0 ? name.slice(dot) : '';
+  let candidate = name, n = 0;
+  for (;;){
+    try { await dir.getFileHandle(candidate); }
+    catch(e){ return candidate; }
+    n++;
+    candidate = base + ' (' + n + ')' + ext;
+    if (n > 500) return base + '-' + Date.now() + ext;
+  }
+}
+async function writeIntoFolder(dir, name, blob){
+  const finalName = await uniqueName(dir, name || 'audio.mp3');
+  const fh = await dir.getFileHandle(finalName, { create:true });
+  const w = await fh.createWritable();
+  await w.write(blob);
+  await w.close();
+  return finalName;
+}
+
+async function getFileForTrack(t){
+  if (state.mode === 'folder' && t.handle){
+    try { return await t.handle.getFile(); } catch(e){ return null; }
+  }
+  const rec = await dbGet('audio', t.id);
+  return rec ? rec.blob : null;
+}
+
+/* =========================================================
    RENDER
    ========================================================= */
 function visibleTracks(){
@@ -898,9 +1165,9 @@ function visibleTracks(){
 
   const s = state.sort;
   if (!(state.view === 'playlist' && s === 'added')){
-    if (s === 'title')    arr.sort((a,b) => (a.title||'').localeCompare(b.title||'', 'pt-BR'));
-    else if (s === 'artist') arr.sort((a,b) => (a.artist||'zzz').localeCompare(b.artist||'zzz', 'pt-BR') || (a.title||'').localeCompare(b.title||'','pt-BR'));
-    else if (s === 'album')  arr.sort((a,b) => (a.album||'zzz').localeCompare(b.album||'zzz','pt-BR') || (a.trackNo||0) - (b.trackNo||0));
+    if (s === 'title') arr.sort((a,b) => native(a.title, b.title));
+    else if (s === 'artist') arr.sort((a,b) => native(a.artist || 'zzz', b.artist || 'zzz') || native(a.title, b.title));
+    else if (s === 'album') arr.sort((a,b) => native(a.album || 'zzz', b.album || 'zzz') || (parseInt(a.trackNo)||0) - (parseInt(b.trackNo)||0));
     else if (s === 'duration') arr.sort((a,b) => (a.duration||0) - (b.duration||0));
   }
   if (s === 'added' && state.view !== 'playlist') arr.sort((a,b) => (b.addedAt||0) - (a.addedAt||0));
@@ -916,7 +1183,7 @@ function coverHTML(t, cls){
 
 function rowHTML(t, i){
   const playing = t.id === state.currentId;
-  return `<div class="row${playing ? ' playing' : ''}" data-id="${t.id}">
+  return `<div class="row${playing ? ' playing' : ''}" data-id="${esc(t.id)}">
     <div class="idx"><span class="n">${i+1}</span><span class="eq"><i></i><i></i><i></i></span></div>
     ${coverHTML(t, 'cov')}
     <div class="tt">
@@ -947,13 +1214,24 @@ function renderList(){
 }
 
 function emptyHTML(){
+  if (state.mode === 'folder' && state.needReconnect){
+    return `<div class="empty"><div class="big">${I.folder}</div>
+      <h3>A pasta "${esc(state.rootName)}" está desconectada</h3>
+      <p>O navegador pede a permissão de novo cada vez que você abre o app. Suas músicas continuam na pasta.</p>
+      <button class="btn primary" onclick="reconnectFolder()">Reconectar pasta</button></div>`;
+  }
   if (state.tracks.length === 0){
-    return `<div class="empty">
-      <div class="big">${I.music}</div>
+    if (state.mode === 'folder'){
+      return `<div class="empty"><div class="big">${I.folder}</div>
+        <h3>A pasta está vazia</h3>
+        <p>Coloque arquivos de música em <b>${esc(state.rootName)}</b> ou use o botão Importar para copiá-los para lá.</p>
+        <button class="btn primary" onclick="document.getElementById('fileInput').click()">${I.up} Importar para a pasta</button></div>`;
+    }
+    return `<div class="empty"><div class="big">${I.music}</div>
       <h3>Sua biblioteca está vazia</h3>
-      <p>Arraste seus arquivos de áudio para cá, ou clique em Importar. Tudo fica salvo no seu navegador.</p>
+      <p>Arraste seus arquivos de áudio para cá, ou clique em Importar.</p>
       <button class="btn primary" onclick="document.getElementById('fileInput').click()">${I.up} Importar músicas</button>
-    </div>`;
+      ${fsSupported() ? `<button class="btn" onclick="openLocationModal()">${I.folder} Usar uma pasta do computador</button>` : ''}</div>`;
   }
   if (state.search.trim()){
     return `<div class="empty"><div class="big">${I.music}</div>
@@ -997,7 +1275,7 @@ function renderNav(){
 }
 
 function renderHeader(){
-  let title = 'Todas as músicas', meta = '';
+  let title = 'Todas as músicas';
   const list = visibleTracks();
   const totalDur = list.reduce((s,t) => s + (t.duration||0), 0);
 
@@ -1008,6 +1286,7 @@ function renderHeader(){
   }
   $('#viewTitle').textContent = title;
 
+  let meta = '';
   if (state.tracks.length === 0) meta = 'Nenhuma música ainda';
   else if (list.length === 0) meta = 'Nenhuma música';
   else {
@@ -1016,17 +1295,17 @@ function renderHeader(){
     meta = `${n} ${n === 1 ? 'música' : 'músicas'} · ${artists} ${artists === 1 ? 'artista' : 'artistas'} · ${fmtTotal(totalDur)}`;
   }
   $('#viewMeta').textContent = meta;
+  $('#rescanBtn').style.display = state.mode === 'folder' ? '' : 'none';
 }
 
-async function renderStorage(){
-  try {
-    if (!navigator.storage || !navigator.storage.estimate){ $('#sidefoot').innerHTML = ''; return; }
-    const est = await navigator.storage.estimate();
-    const bytes = state.tracks.reduce((s,t) => s + (t.size||0), 0);
-    const used = est.usage || 0;
-    $('#sidefoot').innerHTML = `<b>${state.tracks.length}</b> músicas · <b>${fmtBytes(bytes)}</b><br>
-      Armazenamento usado: ${fmtBytes(used)}`;
-  } catch(e){}
+function renderStorage(){
+  const total = state.tracks.reduce((s,t) => s + (t.size||0), 0);
+  const loc = state.mode === 'folder'
+    ? `<button class="locbtn" id="locBtn" title="Trocar de pasta">${I.folder}<span>${esc(state.rootName || 'Pasta')}</span></button>`
+    : `<button class="locbtn" id="locBtn" title="Escolher onde guardar">${I.db}<span>Armazenamento do navegador</span></button>`;
+  $('#sidefoot').innerHTML = loc + `<b>${state.tracks.length}</b> músicas · <b>${fmtBytes(total)}</b>`;
+  const b = $('#locBtn');
+  if (b) b.onclick = openLocationModal;
 }
 
 function renderAll(){
@@ -1052,26 +1331,28 @@ function setQueueFromView(startId){
   state.qIndex = Math.max(0, q.indexOf(startId));
 }
 
+function revokeURL(){ if (currentURL){ URL.revokeObjectURL(currentURL); currentURL = null; } }
+
 async function playTrack(id, opts){
   const t = byId(id);
   if (!t) return;
 
   if (opts && opts.newQueue) setQueueFromView(id);
-  else if (!state.queue.includes(id)){
-    setQueueFromView(id);
-  } else {
-    state.qIndex = state.queue.indexOf(id);
-  }
+  else if (!state.queue.includes(id)) setQueueFromView(id);
+  else state.qIndex = state.queue.indexOf(id);
 
-  const rec = await dbGet('audio', id);
-  if (!rec || !rec.blob){ toast('Arquivo não encontrado no armazenamento.'); return; }
+  let blob = null;
+  if (state.mode === 'folder'){ showProgress('Abrindo…'); blob = await getFileForTrack(t); hideProgress(0); }
+  else blob = await getFileForTrack(t);
 
-  if (currentURL) { URL.revokeObjectURL(currentURL); currentURL = null; }
-  currentURL = URL.createObjectURL(rec.blob);
+  if (!blob){ toast('Não consegui abrir o arquivo desta música.'); return; }
+
+  revokeURL();
+  currentURL = URL.createObjectURL(blob);
   audio.src = currentURL;
   state.currentId = id;
 
-  try { await audio.play(); } catch(e){ /* autoplay bloqueado */ }
+  try { await audio.play(); } catch(e){}
 
   renderPlayer();
   updateMediaSession(t);
@@ -1080,9 +1361,6 @@ async function playTrack(id, opts){
 
 function highlightRow(){
   $$('#trackList .row').forEach(r => r.classList.toggle('playing', r.dataset.id === state.currentId));
-  const idx = state.viewIds.indexOf(state.currentId);
-  const row = $$('#trackList .row')[idx];
-  if (row) row.querySelector('.idx').querySelector('.n').textContent = idx + 1;
 }
 
 function renderPlayer(){
@@ -1095,13 +1373,14 @@ function renderPlayer(){
     covEl.style.background = grad(t.album || t.artist || t.title);
     covEl.innerHTML = t.cover ? `<img src="${t.cover}" alt="">` : I.music;
     $('#npFav').classList.toggle('on', !!t.favorite);
-    $('#npFav').style.color = t.favorite ? 'var(--accent)' : '';
     $('#npFav').querySelector('svg').style.fill = t.favorite ? 'currentColor' : 'none';
     $('#durTime').textContent = fmt(t.duration);
     document.title = (audio.paused ? '' : '▶ ') + (t.title || 'Música') + ' — Biblioteca';
   } else {
     titleEl.textContent = 'Nada tocando';
-    artistEl.textContent = 'Importe suas músicas para começar';
+    artistEl.textContent = state.mode === 'folder'
+      ? 'Lendo de ' + (state.rootName || 'uma pasta')
+      : 'Importe suas músicas para começar';
     covEl.style.background = '';
     covEl.innerHTML = I.music;
     $('#npFav').classList.remove('on');
@@ -1139,7 +1418,7 @@ function nextTrack(auto){
       i = 0;
     } else {
       audio.pause();
-      state.qIndex = state.queue.length; // fim
+      state.qIndex = state.queue.length;
       renderPlayer();
       return;
     }
@@ -1155,7 +1434,6 @@ function prevTrack(){
   playTrack(state.queue[i]);
 }
 
-/* ---------- eventos do áudio ---------- */
 audio.addEventListener('timeupdate', () => {
   const d = audio.duration || 0;
   if (!d) return;
@@ -1170,34 +1448,52 @@ audio.addEventListener('timeupdate', () => {
 
 audio.addEventListener('loadedmetadata', () => {
   const t = state.currentId ? byId(state.currentId) : null;
-  if (t && (!t.duration || Math.abs(t.duration - audio.duration) > 1)){
-    t.duration = audio.duration;
-    dbPut('tracks', t).catch(()=>{});
+  const d = audio.duration;
+  if (t && isFinite(d) && d > 0 && (!t.duration || Math.abs(t.duration - d) > 1)){
+    t.duration = d;
+    if (state.mode === 'folder' && t.path){
+      dbPut('cache', Object.assign({}, cacheRecordFor(t), { duration: d })).catch(()=>{});
+    } else {
+      dbPut('tracks', t).catch(()=>{});
+    }
     renderList(); renderHeader();
   }
   $('#durTime').textContent = fmt(audio.duration);
 });
 
-audio.addEventListener('play', () => { renderPlayer(); });
-audio.addEventListener('pause', () => { renderPlayer(); });
+function cacheRecordFor(t){
+  return {
+    id: (state.rootName || 'root') + '::' + t.path,
+    size: t.size, mtime: t.mtime, title: t.title, artist: t.artist, album: t.album,
+    year: t.year, genre: t.genre, trackNo: t.trackNo, duration: t.duration, cover: t.cover
+  };
+}
+
+audio.addEventListener('play', () => renderPlayer());
+audio.addEventListener('pause', () => renderPlayer());
 audio.addEventListener('ended', () => nextTrack(true));
 audio.addEventListener('error', () => { if (state.currentId) toast('Não consegui tocar este arquivo.'); });
 
 /* =========================================================
-   AÇÕES DE UI
+   AÇÕES
    ========================================================= */
 function setView(v, plId){
   state.view = v;
   state.playlistId = plId || null;
-  const app = $('#app'); app.classList.remove('nav-open');
+  $('#app').classList.remove('nav-open');
   renderAll();
+}
+
+function persistFavorite(t){
+  if (state.mode === 'folder') scheduleSidecarSave();
+  else dbPut('tracks', t).catch(()=>{});
 }
 
 function toggleFav(id){
   const t = byId(id);
   if (!t) return;
   t.favorite = !t.favorite;
-  dbPut('tracks', t).catch(()=>{});
+  persistFavorite(t);
   renderList(); renderNav(); renderPlayer(); renderHeader();
   if (t.favorite) toast('Adicionada às favoritas');
 }
@@ -1221,6 +1517,137 @@ $('#modal').addEventListener('click', e => {
   if (btn && modalHandler) modalHandler(btn.dataset.a, btn);
 });
 
+/* ---------- modal de local ---------- */
+function openLocationModal(){
+  const fsOK = fsSupported();
+  const where = state.mode === 'folder'
+    ? `<b>${esc(state.rootName || 'pasta')}</b> (pasta do computador)`
+    : 'armazenamento do navegador';
+
+  const folderOpt = fsOK
+    ? `<button class="mi" data-a="folder">${I.folder}<span>Escolher uma pasta do computador<small>As músicas, as playlists e as favoritas ficam em arquivos na pasta escolhida. Não some ao limpar o navegador.</small></span></button>`
+    : `<button class="mi" data-a="none">${I.folder}<span style="color:var(--muted2)">Pasta do computador<small>Este navegador não suporta. Use Chrome ou Edge no computador (no celular também não está disponível).</small></span></button>`;
+
+  showModal(`
+    <h3>Onde guardar a biblioteca</h3>
+    <p class="sub">Agora: ${where}</p>
+    ${folderOpt}
+    <button class="mi" data-a="browser">${I.db}<span>Guardar no navegador<small>Funciona em qualquer navegador, mas pode sumir se você limpar os dados do site.</small></span></button>
+    ${state.mode === 'folder' && state.needReconnect ? `<button class="mi" data-a="reconnect">${I.play}<span>Reconectar permissão da pasta</span></button>` : ''}
+    ${state.mode === 'folder' ? `<div class="sep"></div><button class="mi" data-a="rescan">${I.music}<span>Reler a pasta agora<small>Para quando você adicionar ou remover arquivos por fora.</small></span></button>` : ''}
+  `, a => {
+    if (a === 'folder') chooseFolder();
+    if (a === 'browser') switchToBrowser();
+    if (a === 'reconnect'){ closeModal(); reconnectFolder(); }
+    if (a === 'rescan'){ closeModal(); loadFolder(); }
+  });
+}
+
+async function chooseFolder(){
+  closeModal();
+  let handle;
+  try {
+    handle = await pickFolder();
+  } catch(e){
+    return; // usuário cancelou
+  }
+  const ok = await askPermission(handle);
+  if (!ok){ toast('Preciso da permissão para ler e gravar na pasta.'); return; }
+
+  const browserTracks = state.mode === 'browser' ? state.tracks.slice() : [];
+
+  audio.pause();
+  state.currentId = null;
+  state.queue = []; state.qIndex = -1;
+  revokeURL();
+  renderPlayer();
+
+  state.mode = 'folder';
+  state.root = handle;
+  state.rootName = handle.name || 'Pasta';
+  try {
+    await dbPut('settings', { id:'mode', value:'folder' });
+    await dbPut('settings', { id:'root', handle });
+  } catch(e){ console.warn('não consegui salvar a pasta', e); }
+
+  await loadFolder();
+
+  if (browserTracks.length) offerMigration(browserTracks);
+  else toast('Biblioteca aberta em "' + state.rootName + '"');
+}
+
+async function switchToBrowser(){
+  closeModal();
+  state.mode = 'browser';
+  state.root = null;
+  state.rootName = '';
+  state.needReconnect = false;
+  hideBanner();
+  audio.pause(); state.currentId = null; state.queue = []; state.qIndex = -1; revokeURL();
+  try {
+    await dbPut('settings', { id:'mode', value:'browser' });
+    await dbDel('settings', 'root');
+  } catch(e){}
+  await loadBrowserLibrary();
+  renderAll();
+  toast(state.tracks.length
+    ? 'Usando o armazenamento do navegador (' + state.tracks.length + ' músicas)'
+    : 'Usando o armazenamento do navegador');
+}
+
+function offerMigration(tracks){
+  showModal(`
+    <h3>Mover as músicas para a pasta?</h3>
+    <p class="txt">Existem <b>${tracks.length}</b> música${tracks.length === 1 ? '' : 's'} no armazenamento do navegador.
+      Posso copiá-las para <b>${esc(state.rootName)}</b> e liberar o espaço do navegador. As favoritas e playlists vêm junto.</p>
+    <button class="mi" data-a="yes">${I.up} Sim, mover tudo para a pasta</button>
+    <button class="mi" data-a="no" data-dismiss="1">${I.close} Deixar como está</button>
+  `, a => { if (a === 'yes'){ closeModal(); migrateBrowserTracks(tracks); } });
+}
+
+async function migrateBrowserTracks(olds){
+  showProgress('Movendo para a pasta…');
+  const nameToPath = new Map();
+  const idToName = new Map(olds.map(t => [t.id, t.name || (t.title || 'audio')]));
+  let ok = 0, err = 0;
+
+  for (let i = 0; i < olds.length; i++){
+    const t = olds[i];
+    setProgress('Movendo para a pasta…', t.name || t.title, (i / olds.length) * 100);
+    const rec = await dbGet('audio', t.id);
+    if (!rec || !rec.blob){ err++; continue; }
+    try {
+      const finalName = await writeIntoFolder(state.root, t.name || ((t.title || 'audio') + '.mp3'), rec.blob);
+      nameToPath.set(t.name || (t.title || 'audio'), finalName);
+      await dbDel('audio', t.id);
+      await dbDel('tracks', t.id);
+      ok++;
+    } catch(e){ err++; }
+  }
+
+  const oldPls = await dbAll('playlists').catch(()=>[]);
+  const favNames = new Set(olds.filter(t => t.favorite).map(t => t.name));
+
+  await loadFolder();
+
+  state.tracks.forEach(t => {
+    if (favNames.has(t.name)) t.favorite = true;
+  });
+
+  const merged = [];
+  for (const pl of oldPls){
+    const paths = (pl.trackIds || []).map(id => nameToPath.get(idToName.get(id))).filter(Boolean);
+    if (paths.length) merged.push({ id: uid(), name: pl.name, trackIds: paths, createdAt: Date.now() });
+    await dbDel('playlists', pl.id).catch(()=>{});
+  }
+  if (merged.length) state.playlists = state.playlists.concat(merged);
+
+  await saveSidecar();
+  hideProgress(0);
+  renderAll();
+  toast(ok + ' música' + (ok === 1 ? '' : 's') + ' movida' + (ok === 1 ? '' : 's') + ' para a pasta' + (err ? ' · ' + err + ' falharam' : ''));
+}
+
 function openTrackMenu(id){
   const t = byId(id);
   if (!t) return;
@@ -1232,7 +1659,8 @@ function openTrackMenu(id){
     <button class="mi" data-a="fav">${I.heart} ${t.favorite ? 'Remover das favoritas' : 'Adicionar às favoritas'}</button>
     <button class="mi" data-a="pl">${I.listAdd} Adicionar à playlist…</button>
     ${inPl ? `<button class="mi" data-a="rmpl">${I.close} Remover desta playlist</button>` : ''}
-    <button class="mi danger" data-a="del">${I.trash} Excluir da biblioteca</button>
+    ${state.mode === 'folder' && t.path ? `<div style="padding:0 14px 8px;color:var(--muted2);font-size:11.5px;word-break:break-all">${esc(t.path)}</div>` : ''}
+    <button class="mi danger" data-a="del">${I.trash} ${state.mode === 'folder' ? 'Apagar o arquivo da pasta' : 'Excluir da biblioteca'}</button>
   `, a => {
     if (a === 'play'){ closeModal(); playTrack(id, { newQueue: true }); }
     if (a === 'fav'){ toggleFav(id); closeModal(); }
@@ -1267,12 +1695,14 @@ function openPlaylistPicker(trackId){
 function askDelete(id){
   const t = byId(id);
   if (!t) return;
+  const folder = state.mode === 'folder';
   showModal(`
-    <h3>Excluir música?</h3>
+    <h3>${folder ? 'Apagar o arquivo?' : 'Excluir música?'}</h3>
     <p class="sub">${esc(t.title || '')}</p>
-    <p style="color:var(--muted);font-size:13px;padding:0 14px 12px;margin:0;line-height:1.6">
-      O arquivo será removido do armazenamento do navegador. Essa ação não pode ser desfeita.</p>
-    <button class="mi danger" data-a="yes">${I.trash} Sim, excluir</button>
+    <p class="txt">${folder
+      ? 'O arquivo <b>' + esc(t.name) + '</b> será apagado do disco, não vai para a lixeira. Não tem como desfazer.'
+      : 'O arquivo será removido do armazenamento do navegador. Não tem como desfazer.'}</p>
+    <button class="mi danger" data-a="yes">${I.trash} Sim, apagar</button>
     <button class="mi" data-a="no" data-dismiss="1">${I.close} Cancelar</button>
   `, a => { if (a === 'yes'){ closeModal(); deleteTrack(id); } });
 }
@@ -1281,57 +1711,78 @@ function askDelete(id){
 async function createPlaylist(name){
   const pl = { id: uid(), name, trackIds: [], createdAt: Date.now() };
   state.playlists.push(pl);
-  await dbPut('playlists', pl);
+  if (state.mode === 'folder') scheduleSidecarSave();
+  else await dbPut('playlists', pl);
   renderNav();
   return pl;
+}
+async function persistPlaylist(pl){
+  if (state.mode === 'folder') scheduleSidecarSave();
+  else await dbPut('playlists', pl);
 }
 async function addToPlaylist(plId, trackId){
   const pl = state.playlists.find(p => p.id === plId);
   if (!pl) return;
   if (pl.trackIds.includes(trackId)){ toast('Essa música já está na playlist.'); return; }
   pl.trackIds.push(trackId);
-  await dbPut('playlists', pl);
+  await persistPlaylist(pl);
   renderNav();
-  if (state.view === 'playlist' && state.playlistId === plId){ renderAll(); }
+  if (state.view === 'playlist' && state.playlistId === plId) renderAll();
   toast('Adicionada a "' + pl.name + '"');
 }
 async function removeFromPlaylist(plId, trackId){
   const pl = state.playlists.find(p => p.id === plId);
   if (!pl) return;
   pl.trackIds = pl.trackIds.filter(i => i !== trackId);
-  await dbPut('playlists', pl);
+  await persistPlaylist(pl);
   renderAll();
   toast('Removida da playlist');
 }
 async function deletePlaylist(plId){
   const pl = state.playlists.find(p => p.id === plId);
   if (!pl) return;
-  if (!confirm('Excluir a playlist "' + pl.name + '"? As músicas continuam na biblioteca.')) return;
+  if (!confirm('Excluir a playlist "' + pl.name + '"?' + (state.mode === 'folder' ? '' : ' As músicas continuam na biblioteca.'))) return;
   state.playlists = state.playlists.filter(p => p.id !== plId);
-  await dbDel('playlists', plId);
+  if (state.mode === 'folder') scheduleSidecarSave();
+  else await dbDel('playlists', plId);
   if (state.view === 'playlist' && state.playlistId === plId) setView('all');
   else renderAll();
 }
 
 async function deleteTrack(id){
-  await dbDel('audio', id);
-  await dbDel('tracks', id);
-  state.tracks = state.tracks.filter(t => t.id !== id);
+  const t = byId(id);
+  if (!t) return;
+
+  if (state.mode === 'folder'){
+    try {
+      await (t.parent || state.root).removeEntry(t.name);
+    } catch(e){
+      toast('Não consegui apagar o arquivo. Ele pode estar em uso ou a pasta é somente leitura.');
+      return;
+    }
+    try { await dbDel('cache', (state.rootName || 'root') + '::' + t.path); } catch(e){}
+    scheduleSidecarSave();
+  } else {
+    await dbDel('audio', id);
+    await dbDel('tracks', id);
+  }
+
+  state.tracks = state.tracks.filter(x => x.id !== id);
   for (const pl of state.playlists){
     if (pl.trackIds.includes(id)){
       pl.trackIds = pl.trackIds.filter(i => i !== id);
-      dbPut('playlists', pl).catch(()=>{});
+      persistPlaylist(pl).catch(()=>{});
     }
   }
   if (state.currentId === id){
     audio.pause(); audio.removeAttribute('src');
-    if (currentURL){ URL.revokeObjectURL(currentURL); currentURL = null; }
+    revokeURL();
     state.currentId = null;
     state.queue = state.queue.filter(i => i !== id);
     renderPlayer();
   }
   renderAll();
-  toast('Música excluída');
+  toast('Música apagada');
 }
 
 /* =========================================================
@@ -1342,6 +1793,7 @@ function isAudio(f){
   if (f.type && f.type.startsWith('audio/')) return true;
   return AUDIO_RE.test(f.name || '');
 }
+function isAudioName(n){ return AUDIO_RE.test(n || ''); }
 
 async function filesFromDataTransfer(dt){
   const items = dt.items ? Array.from(dt.items) : [];
@@ -1361,29 +1813,22 @@ async function filesFromDataTransfer(dt){
       } while (batch.length);
     }
   }
-  for (const e of entries){
-    try { await walk(e); } catch(err){}
-  }
+  for (const e of entries){ try { await walk(e); } catch(err){} }
   return out;
 }
 
 async function importFiles(fileList){
   const files = Array.from(fileList || []).filter(isAudio);
   if (!files.length){ toast('Nenhum arquivo de áudio encontrado.'); return; }
+  if (state.mode === 'folder' && state.root) return importToFolder(files);
 
-  const overlay = $('#impOverlay');
-  overlay.classList.add('show');
-  const label = $('#impLabel'), sub = $('#impSub'), bar = $('#impBar');
-  bar.style.width = '0%';
-
+  showProgress('Importando…');
   let added = 0, skipped = 0, errors = 0;
   const existing = new Set(state.tracks.map(t => (t.name || '') + '|' + (t.size || 0)));
 
   for (let i = 0; i < files.length; i++){
     const f = files[i];
-    label.textContent = `Importando ${i+1} de ${files.length}`;
-    sub.textContent = f.name;
-    bar.style.width = ((i / files.length) * 100).toFixed(1) + '%';
+    setProgress(`Importando ${i+1} de ${files.length}`, f.name, (i / files.length) * 100);
     await new Promise(r => setTimeout(r, 0));
 
     const key = (f.name || '') + '|' + f.size;
@@ -1393,7 +1838,6 @@ async function importFiles(fileList){
       const tags = await readTags(f);
       const duration = tags.duration || await getDuration(f);
       const fn = fromFileName(f.name || 'audio');
-
       const track = {
         id: uid(),
         name: f.name || 'audio',
@@ -1410,22 +1854,15 @@ async function importFiles(fileList){
         favorite: false,
         cover: tags.cover || null
       };
-
       await dbPut('audio', { id: track.id, blob: f });
       await dbPut('tracks', track);
       state.tracks.push(track);
       existing.add(key);
       added++;
-    } catch (err){
-      errors++;
-      console.warn('Falha ao importar', f.name, err);
-    }
+    } catch (err){ errors++; console.warn('Falha ao importar', f.name, err); }
   }
 
-  bar.style.width = '100%';
-  sub.textContent = '';
-  setTimeout(() => overlay.classList.remove('show'), 220);
-
+  hideProgress(0);
   renderAll();
   let msg = added ? `${added} música${added === 1 ? '' : 's'} importada${added === 1 ? '' : 's'}` : 'Nada novo importado';
   if (skipped) msg += ` · ${skipped} duplicada${skipped === 1 ? '' : 's'}`;
@@ -1433,11 +1870,23 @@ async function importFiles(fileList){
   toast(msg);
 }
 
+async function importToFolder(files){
+  showProgress('Copiando para a pasta…');
+  let ok = 0, err = 0;
+  for (let i = 0; i < files.length; i++){
+    setProgress('Copiando para a pasta…', files[i].name, (i / files.length) * 100);
+    try { await writeIntoFolder(state.root, files[i].name, files[i]); ok++; }
+    catch(e){ err++; console.warn('falha ao copiar', files[i].name, e); }
+  }
+  hideProgress(0);
+  await loadFolder();
+  toast(ok + ' música' + (ok === 1 ? '' : 's') + ' copiada' + (ok === 1 ? '' : 's') + ' para a pasta' + (err ? ' · ' + err + ' com erro' : ''));
+}
+
 /* =========================================================
-   LIGAÇÕES DE EVENTOS
+   EVENTOS
    ========================================================= */
 function bindUI(){
-  // navegação
   document.addEventListener('click', e => {
     const nav = e.target.closest('.navitem[data-view]');
     if (nav){
@@ -1457,7 +1906,6 @@ function bindUI(){
     setView('playlist', p.id);
   });
 
-  // lista
   $('#trackList').addEventListener('click', e => {
     const row = e.target.closest('.row');
     if (!row) return;
@@ -1472,19 +1920,10 @@ function bindUI(){
     playTrack(id, { newQueue: true });
   });
 
-  $('#trackList').addEventListener('dblclick', e => {
-    const row = e.target.closest('.row');
-    if (row) playTrack(row.dataset.id, { newQueue: true });
-  });
-
-  // busca
   let sT;
   $('#search').addEventListener('input', e => {
     clearTimeout(sT);
-    sT = setTimeout(() => {
-      state.search = e.target.value;
-      renderHeader(); renderList();
-    }, 130);
+    sT = setTimeout(() => { state.search = e.target.value; renderHeader(); renderList(); }, 130);
   });
 
   $('#sortSel').addEventListener('change', e => {
@@ -1492,28 +1931,26 @@ function bindUI(){
     renderHeader(); renderList();
   });
 
-  // hamburguer mobile
   $('#hamb').addEventListener('click', () => $('#app').classList.toggle('nav-open'));
   $('#scrim').addEventListener('click', () => $('#app').classList.remove('nav-open'));
 
-  // importar
   $('#importBtn').addEventListener('click', () => $('#fileInput').click());
-  $('#folderBtn').addEventListener('click', () => $('#folderInput').click());
+  $('#folderBtn').addEventListener('click', openLocationModal);
+  $('#rescanBtn').addEventListener('click', () => loadFolder());
   $('#fileInput').addEventListener('change', e => { importFiles(e.target.files); e.target.value = ''; });
   $('#folderInput').addEventListener('change', e => { importFiles(e.target.files); e.target.value = ''; });
 
-  // drag & drop
   let dragDepth = 0;
   const drop = $('#drop');
   window.addEventListener('dragenter', e => {
     if (!e.dataTransfer || !Array.from(e.dataTransfer.types || []).includes('Files')) return;
     dragDepth++; drop.classList.add('show');
   });
-  window.addEventListener('dragleave', e => {
+  window.addEventListener('dragleave', () => {
     dragDepth = Math.max(0, dragDepth - 1);
     if (dragDepth === 0) drop.classList.remove('show');
   });
-  window.addEventListener('dragover', e => { e.preventDefault(); });
+  window.addEventListener('dragover', e => e.preventDefault());
   window.addEventListener('drop', async e => {
     e.preventDefault();
     dragDepth = 0; drop.classList.remove('show');
@@ -1522,11 +1959,10 @@ function bindUI(){
     importFiles(files);
   });
 
-  // player
   $('#playBtn').addEventListener('click', () => {
     if (!state.currentId){
       if (state.viewIds.length) playTrack(state.viewIds[0], { newQueue: true });
-      else toast('Importe músicas primeiro.');
+      else toast(state.needReconnect ? 'Reconecte a pasta primeiro.' : 'Importe músicas primeiro.');
       return;
     }
     if (audio.paused) audio.play().catch(()=>{});
@@ -1551,7 +1987,6 @@ function bindUI(){
 
   $('#npFav').addEventListener('click', () => { if (state.currentId) toggleFav(state.currentId); });
 
-  // seek
   const sk = $('#seek');
   sk.addEventListener('input', e => {
     sk.dataset.drag = '1';
@@ -1564,7 +1999,6 @@ function bindUI(){
     delete sk.dataset.drag;
   });
 
-  // volume
   const vol = $('#vol');
   const applyVol = v => {
     audio.volume = Math.max(0, Math.min(1, v / 100));
@@ -1580,7 +2014,6 @@ function bindUI(){
     else { audio.muted = true; vol.style.setProperty('--p','0%'); $('#volPct').textContent = '0'; }
   });
 
-  // tocar tudo
   $('#playAllBtn').addEventListener('click', () => {
     if (!state.viewIds.length){ toast('Nada para tocar.'); return; }
     state.shuffle = false;
@@ -1589,12 +2022,10 @@ function bindUI(){
   $('#shuffleAllBtn').addEventListener('click', () => {
     if (!state.viewIds.length){ toast('Nada para tocar.'); return; }
     state.shuffle = true;
-    const pool = state.viewIds.slice();
-    const first = shuffleArr(pool.slice())[0];
+    const first = shuffleArr(state.viewIds.slice())[0];
     playTrack(first, { newQueue: true });
   });
 
-  // teclado
   document.addEventListener('keydown', e => {
     const tag = (e.target.tagName || '').toLowerCase();
     if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
@@ -1604,7 +2035,6 @@ function bindUI(){
     else if (e.key === 'Escape'){ closeModal(); $('#app').classList.remove('nav-open'); }
   });
 
-  // media session
   if ('mediaSession' in navigator){
     try {
       navigator.mediaSession.setActionHandler('play', () => audio.play());
@@ -1618,19 +2048,38 @@ function bindUI(){
 /* =========================================================
    INICIALIZAÇÃO
    ========================================================= */
+async function loadBrowserLibrary(){
+  state.tracks = await dbAll('tracks').catch(()=>[]);
+  state.playlists = await dbAll('playlists').catch(()=>[]);
+  state.playlists.sort((a,b) => (a.createdAt||0) - (b.createdAt||0));
+}
+
 async function init(){
   bindUI();
-  try {
-    await openDB();
-  } catch (e){
-    $('#fatal').classList.add('show');
-    return;
-  }
-  try { state.tracks = await dbAll('tracks'); } catch(e){ state.tracks = []; }
-  try { state.playlists = await dbAll('playlists'); } catch(e){ state.playlists = []; }
-  state.playlists.sort((a,b) => (a.createdAt||0) - (b.createdAt||0));
+  try { await openDB(); }
+  catch(e){ $('#fatal').classList.add('show'); return; }
 
-  renderAll();
+  const modeRec = await dbGet('settings', 'mode').catch(()=>null);
+  const rootRec = await dbGet('settings', 'root').catch(()=>null);
+
+  if (modeRec && modeRec.value === 'folder' && rootRec && rootRec.handle){
+    state.mode = 'folder';
+    state.root = rootRec.handle;
+    state.rootName = rootRec.handle.name || 'Pasta';
+    const p = await permState(state.root);
+    if (p === 'granted'){
+      renderAll();
+      await loadFolder();
+    } else {
+      state.needReconnect = true;
+      renderAll();
+      showBanner('A pasta "' + state.rootName + '" precisa de permissão para ser lida.', 'Reconectar', reconnectFolder);
+    }
+  } else {
+    state.mode = 'browser';
+    await loadBrowserLibrary();
+    renderAll();
+  }
 
   try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch(e){}
 }
